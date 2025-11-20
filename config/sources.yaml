@@ -1,0 +1,226 @@
+usa:
+  enabled: true
+  type: sam_gov
+  api_url: https://api.sam.gov/opportunities/v2/search
+  posted_within_days: 180
+  keywords:
+    - drone
+    - uav
+    - uas
+    - unmanned
+    - uncrewed
+    - quadcopter
+    - rpas
+    - suas
+    - vtol
+    - isr
+    - reconnaissance
+    - counter uas
+    - cuas
+    - anti-drone
+    - propulsion
+    - bldc motor
+    - esc
+    - lidar
+    - remote sensing
+    - eo/ir
+    - tactical communication
+  notice_types:
+    - AWARD_NOTICE
+    - UPDATED_AWARD_NOTICE
+  min_award_amount_usd: 100000
+  max_records: 500
+  handler: sam_parser
+
+canada:
+  enabled: true
+  type: canada_open_data
+  datastore_url: https://open.canada.ca/data/en/api/3/action/datastore_search
+  resource_id: fac950c0-00d5-4ec1-a4d3-9cbebf98a305
+  search_text:
+    - drone
+    - uav
+    - uas
+    - "remotely piloted"
+    - "remote sensing"
+    - lidar
+    - "thermal camera"
+    - "search and rescue"
+    - surveillance
+    - mapping
+    - reconnaissance
+    - "sensor"
+  sort_field: contract_date
+  sort_order: desc
+  owner_org_whitelist: []
+  max_records: 500
+  scan_limit: 5000
+  handler: canada_parser
+
+canada_tenders:
+  enabled: true
+  type: canada_tender_csv
+  download_urls:
+    - https://canadabuys.canada.ca/opendata/pub/2025-2026-TenderNotice-AvisAppelOffres.csv
+    - https://canadabuys.canada.ca/opendata/pub/2024-2025-TenderNotice-AvisAppelOffres.csv
+  keywords:
+    - drone
+    - uas
+    - uav
+    - rpas
+    - "search and rescue"
+    - lidar
+    - "thermal"
+    - "payload"
+    - reconnaissance
+  max_records: 200
+  handler: canada_tenders
+
+canada_awards:
+  enabled: true
+  type: canada_award_csv
+  download_urls:
+    - https://canadabuys.canada.ca/opendata/pub/2025-2026-awardNotice-avisAttribution.csv
+    - https://canadabuys.canada.ca/opendata/pub/2024-2025-awardNotice-avisAttribution.csv
+  keywords:
+    - drone
+    - uas
+    - uav
+    - rpas
+    - lidar
+    - reconnaissance
+    - "search and rescue"
+  max_records: 200
+  handler: canada_awards
+
+australia:
+  enabled: true
+  type: australia_open_data
+  datastore_url: https://data.gov.au/data/api/3/action/datastore_search
+  resource_id: 06439664-bbcf-4118-a604-164006bffcaa
+  search_text:
+    - drone
+    - uas
+    - uav
+    - rpas
+    - "counter uas"
+    - cuas
+    - reconnaissance
+    - tactical
+    - lidar
+    - mapping
+    - inspection
+    - surveillance
+  max_records: 500
+  handler: aus_parser
+
+japan:
+  enabled: false
+  type: japan_geps
+  download_url: https://www.geps.go.jp/path-to-official-open-data.zip
+  file_type: zip_csv
+  keywords:
+    - ドローン
+    - 無人機
+    - 無人航空機
+    - UAS
+    - UAV
+    - 点検ドローン
+    - 監視ドローン
+    - 測量ドローン
+    - 赤外線
+    - LiDAR
+    - drone
+    - surveillance
+  csv:
+    encoding: shift_jis
+    delimiter: ","
+    field_map:
+      notice_id: NoticeID
+      title: ItemName
+      description: Summary
+      agency: ProcuringEntity
+      supplier_name: Winner
+      award_amount: AwardAmount
+      award_date: ContractDate
+      currency: JPY
+  notes: >
+    Replace download_url with the official GEPS/JGP open data package for
+    the specific fiscal period. Ensure license compliance before enabling.
+  handler: jp_geps_parser
+
+taiwan:
+  enabled: false
+  type: taiwan_pcc
+  download_url: https://data.gov.tw/dataset/<dataset-id>/download/<resource-file>
+  file_type: xml
+  keywords:
+    - 無人機
+    - 無人航空器
+    - 無人飛行器
+    - 多旋翼
+    - 四軸
+    - 空拍機
+    - 搜救
+    - 巡檢
+    - 偵搜
+    - 監控
+    - 警用無人機
+    - 光達
+    - 熱顯像
+    - 遙測
+  xml:
+    record_path: //row
+    field_map:
+      notice_id: caseNo
+      title: tenderName
+      description: tenderSummary
+      agency: procuringEntity
+      supplier_name: awardeeName
+      award_amount: awardAmount
+      award_date: awardDate
+      currency: TWD
+  notes: >
+    Use only PCC OpenData (XML/CSV) via data.gov.tw.
+    Avoid scraping HTML due to Cloudflare protection.
+    Replace download_url with the official dataset file link.
+  handler: tw_pcc_parser
+
+taiwan_tenders:
+  enabled: true
+  type: taiwan_tenders
+  download_urls:
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=tender_20250902.xml
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=tender_20250901.xml
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=tender_20250802.xml
+  keywords:
+    - 無人機
+    - 無人載具
+    - 遙控無人
+    - drone
+    - uav
+    - uas
+    - rpas
+    - 空拍
+    - 探測機
+  max_records: 200
+  handler: tw_tender_parser
+
+taiwan_awards:
+  enabled: true
+  type: taiwan_awards
+  download_urls:
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=award_20250902.xml
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=award_20250901.xml
+    - https://web.pcc.gov.tw/tps/tp/OpenData/downloadFile?fileName=award_20250802.xml
+  keywords:
+    - 無人機
+    - 無人載具
+    - 遙控無人
+    - drone
+    - uav
+    - uas
+    - rpas
+    - 空拍
+  max_records: 200
+  handler: tw_award_parser
