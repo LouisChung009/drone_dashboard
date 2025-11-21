@@ -95,6 +95,56 @@ canada_awards:
 
 australia:
   enabled: true
+  type: austender_atm
+  search_url: https://www.tenders.gov.au/Atm
+  filter: Published
+  keywords:
+    - drone
+    - uas
+    - uav
+    - rpas
+    - "counter uas"
+    - cuas
+    - lidar
+    - mapping
+    - inspection
+    - surveillance
+    - reconnaissance
+  max_pages: 7
+  max_records: 150
+  user_agent: Mozilla/5.0 (compatible; DroneTenderResearch/1.0)
+  handler: austender_atm
+
+australia_ocds:
+  enabled: true
+  type: australia_ocds
+  date_field: contractPublished   # contractPublished | contractStart | contractEnd | contractLastModified
+  lookback_days: 60
+  window_days: 7
+  max_releases: 400
+  keywords:
+    - drone
+    - uav
+    - uas
+    - rpas
+    - "counter uas"
+    - cuas
+    - lidar
+    - mapping
+    - inspection
+    - surveillance
+    - reconnaissance
+  unspsc_prefixes:
+    - "2517"     # Aerospace systems
+    - "251716"   # Unmanned vehicles/aircraft
+    - "251717"   # Flight control
+    - "2520"     # Aerospace sensors
+    - "8014"     # Transport/deployment services
+  min_amount: 0
+  handler: australia_ocds
+
+australia_data_gov:
+  enabled: false
   type: australia_open_data
   datastore_url: https://data.gov.au/data/api/3/action/datastore_search
   resource_id: 06439664-bbcf-4118-a604-164006bffcaa
@@ -115,31 +165,44 @@ australia:
   handler: aus_parser
 
 japan:
-  enabled: false
+  enabled: true
   type: japan_geps
-  download_url: https://www.geps.go.jp/path-to-official-open-data.zip
+  download_urls:
+    - https://api.p-portal.go.jp/pps-web-biz/UAB03/OAB0301?fileversion=v001&filename=successful_bid_record_info_all_2025.zip
+    - https://api.p-portal.go.jp/pps-web-biz/UAB03/OAB0301?fileversion=v001&filename=successful_bid_record_info_all_2024.zip
   file_type: zip_csv
   keywords:
     - ドローン
-    - 無人機
     - 無人航空機
+    - 無人機
     - UAS
     - UAV
-    - 点検ドローン
-    - 監視ドローン
-    - 測量ドローン
-    - 赤外線
+    - RPAS
+    - マルチコプター
     - LiDAR
-    - drone
-    - surveillance
+    - レーザー
+    - 測量
+    - 監視
+    - 偵察
+    - 熱赤外
+    - 航空写真
   csv:
-    encoding: shift_jis
+    encoding: utf-8-sig
     delimiter: ","
+    has_header: false
+    field_names:
+      - NoticeID
+      - ItemName
+      - ContractDate
+      - AwardAmount
+      - TypeCode
+      - AgencyCode
+      - Winner
+      - WinnerId
     field_map:
       notice_id: NoticeID
       title: ItemName
-      description: Summary
-      agency: ProcuringEntity
+      agency: AgencyCode
       supplier_name: Winner
       award_amount: AwardAmount
       award_date: ContractDate
